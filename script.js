@@ -44,6 +44,12 @@ const updateRadioOption = (optionNode, score) => {
   scoreSpans[optionNode].textContent = `, score = ${score}`;
 };
 
+const updateScore = (selectedValue, achieved) => {
+  totalScore += parseInt(selectedValue);
+  totalScoreText.textContent = totalScore;
+  scoreHistory.innerHTML += `<li>${achieved} : ${selectedValue}</li>`;
+};
+
 // rastrea los numeros duplicados en diceValueArr y los muestra al costado de los radioBtn
 const getHighestDuplicates = (arr) => {
   const counts = {};
@@ -84,6 +90,22 @@ const resetRadioOption = () => {
   });
 };
 
+const resetGame = () => {
+  diceValuesArr = [0, 0, 0, 0, 0];
+  score = 0;
+  totalScore = 0;
+  rolls = 0;
+  round = 1;
+  listOfAllDice.forEach((dice, index) => {
+    dice.textContent = diceValuesArr[index];
+  });
+  totalScoreText.textContent = totalScore;
+  scoreHistory.innerHTML = '';
+  currentRoundRollsText.textContent = rolls;
+  currentRoundText.textContent = round;
+  resetRadioOption();
+};
+
 rulesBtn.addEventListener('click', () => {
   isModalShowing = !isModalShowing;
   if (isModalShowing) {
@@ -92,6 +114,34 @@ rulesBtn.addEventListener('click', () => {
   } else {
     rulesBtn.textContent = 'Show Rules';
     rulesContainer.style.display = 'none';
+  }
+});
+
+keepScoreBtn.addEventListener('click', () => {
+  let selectedValue;
+  let achieved;
+
+  for (let radioButton of scoreInputs) {
+    if (radioButton.checked) {
+      selectedValue = radioButton.value;
+      achieved = radioButton.id;
+      break;
+    }
+  }
+  if (selectedValue) {
+    rolls = 0;
+    round++;
+    updateStats();
+    resetRadioOption();
+    updateScore(selectedValue, achieved);
+    if (round > 6) {
+      setTimeout(() => {
+        alert(`Game Over! Your total score is ${totalScore}`);
+        resetGame();
+      }, 500);
+    }
+  } else {
+    alert('Please select an option or roll the dice');
   }
 });
 
