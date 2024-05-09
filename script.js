@@ -44,6 +44,18 @@ const updateRadioOption = (optionNode, score) => {
   scoreSpans[optionNode].textContent = `, score = ${score}`;
 };
 
+// rastrea los numeros duplicados en diceValueArr y los muestra al costado de los radioBtn
+const getHighestDuplicates = (arr) => {
+  const counts = {};
+  for (let num of arr) {
+    if (counts[num]) {
+      counts[num]++;
+    } else {
+      counts[num] = 1;
+    }
+  }
+};
+
 rulesBtn.addEventListener('click', () => {
   isModalShowing = !isModalShowing;
   if (isModalShowing) {
@@ -62,6 +74,5 @@ rollDiceBtn.addEventListener('click', () => {
     rolls++;
     rollDice();
     updateStats();
-    updateRadioOption(0, 10);
   }
 });
