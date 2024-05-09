@@ -13,3 +13,55 @@ const keepScoreBtn = document.getElementById('keep-score-btn');
 
 const rulesContainer = document.querySelector('.rules-container');
 const rulesBtn = document.getElementById('rules-btn');
+
+let isModalShowing = false;
+let diceValuesArr = [];
+let rolls = 0;
+let score = 0;
+let totalScore = 0;
+let round = 1;
+
+// Genera numeros aleatorios entre 1 y 6
+const rollDice = () => {
+  diceValuesArr = [];
+  for (let i = 0; i < 5; i++) {
+    const randomDice = Math.floor(Math.random() * 6) + 1;
+    diceValuesArr.push(randomDice);
+  }
+  listOfAllDice.forEach((dice, index) => {
+    dice.textContent = diceValuesArr[index];
+  });
+};
+
+const updateStats = () => {
+  currentRoundRollsText.textContent = rolls;
+  currentRoundText.textContent = round;
+};
+
+const updateRadioOption = (optionNode, score) => {
+  scoreInputs[optionNode].disabled = false;
+  scoreInputs[optionNode].value = score;
+  scoreSpans[optionNode].textContent = `, score = ${score}`;
+};
+
+rulesBtn.addEventListener('click', () => {
+  isModalShowing = !isModalShowing;
+  if (isModalShowing) {
+    rulesBtn.textContent = 'Hide Rules';
+    rulesContainer.style.display = 'block';
+  } else {
+    rulesBtn.textContent = 'Show Rules';
+    rulesContainer.style.display = 'none';
+  }
+});
+
+rollDiceBtn.addEventListener('click', () => {
+  if (rolls === 3) {
+    alert('You have made three rolls this round. Please select a score.');
+  } else {
+    rolls++;
+    rollDice();
+    updateStats();
+    updateRadioOption(0, 10);
+  }
+});
